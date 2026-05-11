@@ -1,8 +1,9 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, OrbitControls, Sparkles, Stars, Text } from "@react-three/drei";
-import { Suspense, useRef, useState } from "react";
+import { Float, OrbitControls, Sparkles, Stars } from "@react-three/drei";
+import { Suspense, useMemo, useRef, useState } from "react";
+import * as THREE from "three";
 import type { Mesh } from "three";
 
 type Ball = {
@@ -12,7 +13,7 @@ type Ball = {
   size?: number;
 };
 
-// 10 balls, generously spread out — sphere-like distribution
+// 10 balls, generously spread out
 const balls: Ball[] = [
   { label: "Next.js",     color: "#22d3ee", position: [-6,  2.6,  0  ], size: 1.0 },
   { label: "React",       color: "#67e8f9", position: [-2.8, 3.2, -1.6], size: 0.9 },
@@ -26,19 +27,54 @@ const balls: Ball[] = [
   { label: "Semgrep",     color: "#fb7185", position: [-3.0,-3.0,  1.2], size: 0.9 },
 ];
 
+function makeLabelTexture(label: string): THREE.CanvasTexture {
+  const W = 1024;
+  const H = 512;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+
+  // black background so emissiveMap = no glow except where text is
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0, 0, W, H);
+
+  // auto-fit font size so long words don't overflow half-canvas (~460px usable)
+  let fontSize = 150;
+  ctx.font = `bold ${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+  while (ctx.measureText(label).width > 460 && fontSize > 40) {
+    fontSize -= 6;
+    ctx.font = `bold ${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+  }
+
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  // render at u=0.25 and u=0.75 so the label is visible from front + back of sphere
+  ctx.fillText(label, W * 0.25, H * 0.5);
+  ctx.fillText(label, W * 0.75, H * 0.5);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.anisotropy = 8;
+  texture.needsUpdate = true;
+  return texture;
+}
+
 function TechBall({ ball }: { ball: Ball }) {
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const size = ball.size ?? 0.9;
 
+  // labels are baked once per ball
+  const labelTexture = useMemo(() => makeLabelTexture(ball.label), [ball.label]);
+
   useFrame((_, dt) => {
     if (!meshRef.current) return;
-    // smooth scale toward target
     const target = hovered ? 1.25 : 1.0;
     const current = meshRef.current.scale.x;
     const next = current + (target - current) * Math.min(1, dt * 8);
     meshRef.current.scale.setScalar(next);
-    // spin faster when hovered
     meshRef.current.rotation.y += dt * (hovered ? 1.2 : 0.25);
   });
 
@@ -57,13 +93,14 @@ function TechBall({ ball }: { ball: Ball }) {
             document.body.style.cursor = "auto";
           }}
         >
-          <sphereGeometry args={[size, 48, 48]} />
+          <sphereGeometry args={[size, 64, 64]} />
           <meshStandardMaterial
             color={ball.color}
-            emissive={ball.color}
-            emissiveIntensity={hovered ? 0.75 : 0.3}
-            roughness={0.35}
-            metalness={0.55}
+            emissive="#ffffff"
+            emissiveMap={labelTexture}
+            emissiveIntensity={hovered ? 1.3 : 0.85}
+            roughness={0.4}
+            metalness={0.45}
           />
         </mesh>
 
@@ -74,18 +111,6 @@ function TechBall({ ball }: { ball: Ball }) {
             <meshBasicMaterial color={ball.color} transparent opacity={0.7} />
           </mesh>
         )}
-
-        <Text
-          position={[0, -size - 0.45, 0]}
-          fontSize={hovered ? 0.32 : 0.24}
-          color="#e2e8f0"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.015}
-          outlineColor="#0f172a"
-        >
-          {ball.label}
-        </Text>
       </group>
     </Float>
   );
