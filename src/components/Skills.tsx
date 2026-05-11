@@ -25,8 +25,8 @@ export default function Skills() {
           What <span className="gradient-text">we build with</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-balance text-slate-400">
-          16 tools we ship with — laid out in a honeycomb. Hover any logo to
-          highlight it. Drag the starfield to orbit.
+          16 tools we ship with — laid out as a honeycomb. Hover any tile to
+          spin it. Drag the empty space to orbit the whole grid.
         </p>
       </motion.div>
 
@@ -48,7 +48,7 @@ export default function Skills() {
         <SkillsScene />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-slate-950/30" />
         <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.3em] text-slate-500">
-          drag · hover · orbit
+          hover to spin · drag to orbit
         </div>
       </motion.div>
     </section>
