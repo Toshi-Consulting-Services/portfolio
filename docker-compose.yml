@@ -1,0 +1,12 @@
+services:
+  portfolio:
+    container_name: portfolio
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      # bind only to docker bridge gateway, not public — Caddy reaches us via host.docker.internal:3003
+      - "172.17.0.1:3003:3000"
+    environment:
+      - NODE_ENV=production
