@@ -1,86 +1,67 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, OrbitControls, Sparkles, Stars } from "@react-three/drei";
-import { Suspense, useMemo, useRef, useState } from "react";
-import * as THREE from "three";
+import {
+  Float,
+  OrbitControls,
+  Decal,
+  Sparkles,
+  Stars,
+  useTexture,
+} from "@react-three/drei";
+import { Suspense, useRef, useState } from "react";
 import type { Mesh } from "three";
 
-type Ball = {
-  label: string;
-  color: string;
+type Tech = {
+  name: string;
+  logo: string;
   position: [number, number, number];
-  size?: number;
 };
 
-// 10 balls, generously spread out
-const balls: Ball[] = [
-  { label: "Next.js",     color: "#22d3ee", position: [-6,  2.6,  0  ], size: 1.0 },
-  { label: "React",       color: "#67e8f9", position: [-2.8, 3.2, -1.6], size: 0.9 },
-  { label: "TypeScript",  color: "#3b82f6", position: [ 0.5, 2.8,  1.5], size: 1.0 },
-  { label: "Three.js",    color: "#a78bfa", position: [ 3.8, 3.2, -1.0], size: 0.9 },
-  { label: "FastAPI",     color: "#10b981", position: [ 6.0, 1.6,  1.4], size: 1.0 },
-  { label: "PostgreSQL",  color: "#0ea5e9", position: [-5.0,-0.5,  1.6], size: 0.95 },
-  { label: "Docker",      color: "#0891b2", position: [-1.6,-1.4, -1.6], size: 0.85 },
-  { label: "Llama 3.3",   color: "#f0abfc", position: [ 1.6,-1.8,  0.6], size: 0.95 },
-  { label: "Groq",        color: "#fbbf24", position: [ 4.6,-1.2, -1.4], size: 0.85 },
-  { label: "Semgrep",     color: "#fb7185", position: [-3.0,-3.0,  1.2], size: 0.9 },
+// 16 techs arranged in honeycomb (4 / 5 / 4 / 3 rows)
+const techs: Tech[] = [
+  // Row 1 — y=3.9
+  { name: "Next.js",    logo: "/logos/nextjs.svg",     position: [-4.5,  3.9,  0.2] },
+  { name: "React",      logo: "/logos/react.svg",      position: [-1.5,  3.9, -0.3] },
+  { name: "TypeScript", logo: "/logos/typescript.svg", position: [ 1.5,  3.9,  0.2] },
+  { name: "Three.js",   logo: "/logos/threejs.svg",    position: [ 4.5,  3.9, -0.3] },
+  // Row 2 (offset) — y=1.3
+  { name: "JavaScript", logo: "/logos/javascript.svg", position: [-6.0,  1.3,  0.0] },
+  { name: "Tailwind",   logo: "/logos/tailwind.svg",   position: [-3.0,  1.3,  0.3] },
+  { name: "Python",     logo: "/logos/python.svg",     position: [ 0.0,  1.3, -0.3] },
+  { name: "FastAPI",    logo: "/logos/fastapi.svg",    position: [ 3.0,  1.3,  0.3] },
+  { name: "Node.js",    logo: "/logos/nodejs.svg",     position: [ 6.0,  1.3,  0.0] },
+  // Row 3 — y=-1.3
+  { name: "PostgreSQL", logo: "/logos/postgresql.svg", position: [-4.5, -1.3, -0.3] },
+  { name: "Redis",      logo: "/logos/redis.svg",      position: [-1.5, -1.3,  0.2] },
+  { name: "Docker",     logo: "/logos/docker.svg",     position: [ 1.5, -1.3, -0.3] },
+  { name: "Nginx",      logo: "/logos/nginx.svg",      position: [ 4.5, -1.3,  0.2] },
+  // Row 4 (offset) — y=-3.9
+  { name: "Linux",      logo: "/logos/linux.svg",      position: [-3.0, -3.9,  0.0] },
+  { name: "Git",        logo: "/logos/git.svg",        position: [ 0.0, -3.9,  0.3] },
+  { name: "GitHub",     logo: "/logos/github.svg",     position: [ 3.0, -3.9,  0.0] },
 ];
 
-function makeLabelTexture(label: string): THREE.CanvasTexture {
-  const W = 1024;
-  const H = 512;
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext("2d")!;
+const BALL_SIZE = 0.95;
+const BALL_COLOR = "#1e293b";
 
-  // black background so emissiveMap = no glow except where text is
-  ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, W, H);
-
-  // auto-fit font size so long words don't overflow half-canvas (~460px usable)
-  let fontSize = 150;
-  ctx.font = `bold ${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
-  while (ctx.measureText(label).width > 460 && fontSize > 40) {
-    fontSize -= 6;
-    ctx.font = `bold ${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
-  }
-
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  // render at u=0.25 and u=0.75 so the label is visible from front + back of sphere
-  ctx.fillText(label, W * 0.25, H * 0.5);
-  ctx.fillText(label, W * 0.75, H * 0.5);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.anisotropy = 8;
-  texture.needsUpdate = true;
-  return texture;
-}
-
-function TechBall({ ball }: { ball: Ball }) {
+function TechBall({ tech }: { tech: Tech }) {
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
-  const size = ball.size ?? 0.9;
-
-  // labels are baked once per ball
-  const labelTexture = useMemo(() => makeLabelTexture(ball.label), [ball.label]);
+  const logoTex = useTexture(tech.logo);
 
   useFrame((_, dt) => {
     if (!meshRef.current) return;
-    const target = hovered ? 1.25 : 1.0;
+    const target = hovered ? 1.2 : 1.0;
     const current = meshRef.current.scale.x;
     const next = current + (target - current) * Math.min(1, dt * 8);
     meshRef.current.scale.setScalar(next);
-    meshRef.current.rotation.y += dt * (hovered ? 1.2 : 0.25);
+    meshRef.current.rotation.y += dt * (hovered ? 0.8 : 0.15);
   });
 
   return (
-    <Float speed={1.1} rotationIntensity={0.2} floatIntensity={0.5}>
-      <group position={ball.position}>
+    <Float speed={0.9} rotationIntensity={0.15} floatIntensity={0.4}>
+      <group position={tech.position}>
         <mesh
           ref={meshRef}
           onPointerOver={(e) => {
@@ -93,22 +74,34 @@ function TechBall({ ball }: { ball: Ball }) {
             document.body.style.cursor = "auto";
           }}
         >
-          <sphereGeometry args={[size, 64, 64]} />
+          <sphereGeometry args={[BALL_SIZE, 48, 48]} />
           <meshStandardMaterial
-            color={ball.color}
-            emissive="#ffffff"
-            emissiveMap={labelTexture}
-            emissiveIntensity={hovered ? 1.3 : 0.85}
+            color={BALL_COLOR}
             roughness={0.4}
-            metalness={0.45}
+            metalness={0.5}
+            emissive={hovered ? "#22d3ee" : "#000000"}
+            emissiveIntensity={hovered ? 0.25 : 0}
           />
+          <Decal
+            position={[0, 0, BALL_SIZE]}
+            rotation={[0, 0, 0]}
+            scale={BALL_SIZE * 1.4}
+          >
+            <meshStandardMaterial
+              map={logoTex}
+              transparent
+              polygonOffset
+              polygonOffsetFactor={-5}
+              roughness={0.5}
+              metalness={0}
+            />
+          </Decal>
         </mesh>
 
-        {/* halo ring on hover */}
         {hovered && (
           <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <torusGeometry args={[size * 1.4, 0.03, 16, 64]} />
-            <meshBasicMaterial color={ball.color} transparent opacity={0.7} />
+            <torusGeometry args={[BALL_SIZE * 1.35, 0.03, 16, 64]} />
+            <meshBasicMaterial color="#22d3ee" transparent opacity={0.7} />
           </mesh>
         )}
       </group>
@@ -119,16 +112,16 @@ function TechBall({ ball }: { ball: Ball }) {
 export default function SkillsScene() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 14], fov: 50 }}
+      camera={{ position: [0, 0, 13], fov: 55 }}
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true }}
       className="!absolute inset-0"
     >
       <Suspense fallback={null}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[8, 8, 8]} intensity={1.4} color="#22d3ee" />
-        <pointLight position={[-8, -8, -8]} intensity={0.9} color="#a78bfa" />
-        <pointLight position={[0, 5, -3]} intensity={0.5} color="#f0abfc" />
+        <ambientLight intensity={0.6} />
+        <pointLight position={[8, 8, 8]} intensity={1.6} color="#ffffff" />
+        <pointLight position={[-8, -8, -8]} intensity={1.0} color="#a78bfa" />
+        <pointLight position={[0, 0, 5]} intensity={0.6} color="#22d3ee" />
 
         <Stars
           radius={60}
@@ -140,23 +133,25 @@ export default function SkillsScene() {
           speed={0.4}
         />
         <Sparkles
-          count={70}
-          scale={18}
+          count={60}
+          scale={20}
           size={2}
           speed={0.25}
           color="#67e8f9"
-          opacity={0.55}
+          opacity={0.45}
         />
 
-        {balls.map((b) => (
-          <TechBall key={b.label} ball={b} />
+        {techs.map((t) => (
+          <Suspense key={t.name} fallback={null}>
+            <TechBall tech={t} />
+          </Suspense>
         ))}
 
         <OrbitControls
           enableZoom={false}
           enablePan={false}
           autoRotate
-          autoRotateSpeed={0.25}
+          autoRotateSpeed={0.2}
           maxPolarAngle={Math.PI / 1.5}
           minPolarAngle={Math.PI / 3}
         />

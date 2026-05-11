@@ -25,7 +25,8 @@ export default function Skills() {
           What <span className="gradient-text">we build with</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-balance text-slate-400">
-          Hover any planet to highlight it. Drag the starfield to orbit.
+          16 tools we ship with — laid out in a honeycomb. Hover any logo to
+          highlight it. Drag the starfield to orbit.
         </p>
       </motion.div>
 
