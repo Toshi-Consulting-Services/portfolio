@@ -16,17 +16,14 @@ html {
 
 html,
 body {
-  background: var(--background);
   color: var(--foreground);
+  background: var(--background);
   overflow-x: hidden;
 }
 
 body {
   font-family: var(--font-geist-sans), Inter, system-ui, sans-serif;
-  background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(139, 92, 246, 0.18), transparent 60%),
-    radial-gradient(900px 500px at -10% 30%, rgba(6, 182, 212, 0.15), transparent 60%),
-    var(--background);
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer utilities {
@@ -43,8 +40,8 @@ body {
 
   .glass {
     background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid rgba(148, 163, 184, 0.12);
   }
 
@@ -56,19 +53,4 @@ body {
 ::selection {
   background: rgba(139, 92, 246, 0.4);
   color: #fff;
-}
-
-/* subtle starfield for sections without 3D canvas */
-.stars-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 70% 80%, #fff, transparent),
-    radial-gradient(1px 1px at 40% 60%, #fff, transparent),
-    radial-gradient(1px 1px at 85% 20%, #fff, transparent),
-    radial-gradient(1px 1px at 10% 90%, #fff, transparent);
-  opacity: 0.25;
-  pointer-events: none;
 }
