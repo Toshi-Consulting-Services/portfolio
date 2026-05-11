@@ -1,7 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
+import Tilt from "react-parallax-tilt";
+import type { ShapeKind } from "./three/ProjectShape";
+
+const ProjectShape = dynamic(() => import("./three/ProjectShape"), {
+  ssr: false,
+  loading: () => null,
+});
 
 type Project = {
   title: string;
@@ -12,6 +20,7 @@ type Project = {
   image: string;
   stack: string[];
   accent: string;
+  shape: ShapeKind;
 };
 
 const projects: Project[] = [
@@ -25,6 +34,7 @@ const projects: Project[] = [
     image: "/projects/urbi.png",
     stack: ["Next.js", "Llama 3.3", "Groq", "PostgreSQL", "Text-to-SQL"],
     accent: "from-cyan-500/30 to-blue-500/20",
+    shape: "globe",
   },
   {
     title: "Sentinel SCR",
@@ -36,6 +46,7 @@ const projects: Project[] = [
     image: "/projects/sentinel-scr.png",
     stack: ["Next.js", "Semgrep", "Gitleaks", "CWE", "Multi-tenant"],
     accent: "from-violet-500/30 to-fuchsia-500/20",
+    shape: "shield",
   },
   {
     title: "Adaptive Assessment AI",
@@ -47,83 +58,106 @@ const projects: Project[] = [
     image: "/projects/examprep.png",
     stack: ["Next.js", "FastAPI", "PostgreSQL", "Adaptive ML", "Stripe"],
     accent: "from-emerald-500/30 to-teal-500/20",
+    shape: "brain",
   },
 ];
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const reverse = index % 2 === 1;
   return (
-    <motion.article
+    <motion.div
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8, delay: 0.05 }}
-      className={`glass relative overflow-hidden rounded-3xl ${
-        reverse ? "md:flex-row-reverse" : ""
-      } flex flex-col gap-8 p-6 md:flex-row md:p-10`}
     >
-      <div
-        className={`pointer-events-none absolute -top-32 ${
-          reverse ? "-left-32" : "-right-32"
-        } h-72 w-72 rounded-full bg-gradient-to-br ${project.accent} blur-3xl`}
-      />
-
-      <div className="relative w-full overflow-hidden rounded-2xl border border-slate-800/80 md:w-1/2">
-        <div className="aspect-video w-full bg-gradient-to-br from-slate-900 to-slate-800">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={project.image}
-            alt={`${project.title} screenshot`}
-            className="h-full w-full object-cover object-top transition duration-700 hover:scale-[1.03]"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
+      <Tilt
+        glareEnable
+        glareMaxOpacity={0.15}
+        glareColor="#22d3ee"
+        glarePosition="all"
+        tiltMaxAngleX={4}
+        tiltMaxAngleY={4}
+        scale={1.01}
+        transitionSpeed={1500}
+        className="will-change-transform"
+      >
+        <article
+          className={`glass relative overflow-hidden rounded-3xl ${
+            reverse ? "md:flex-row-reverse" : ""
+          } flex flex-col gap-8 p-6 md:flex-row md:p-10`}
+        >
+          <div
+            className={`pointer-events-none absolute -top-32 ${
+              reverse ? "-left-32" : "-right-32"
+            } h-72 w-72 rounded-full bg-gradient-to-br ${project.accent} blur-3xl`}
           />
-        </div>
-      </div>
 
-      <div className="relative flex w-full flex-col justify-center md:w-1/2">
-        <p className="text-xs uppercase tracking-[0.3em] text-cyan-400">
-          {project.subtitle}
-        </p>
-        <h3 className="mt-3 text-3xl font-bold text-slate-100 md:text-4xl">
-          {project.title}
-        </h3>
-        <p className="mt-4 text-sm leading-relaxed text-slate-300 md:text-base">
-          {project.description}
-        </p>
+          <div className="relative w-full md:w-1/2">
+            {/* 3D themed shape behind/over screenshot */}
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-800/80 bg-gradient-to-br from-slate-900/80 to-slate-950">
+              {/* live 3D canvas */}
+              <div className="absolute inset-0">
+                <ProjectShape kind={project.shape} />
+              </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {project.stack.map((s) => (
-            <span
-              key={s}
-              className="rounded-full border border-slate-700/80 bg-slate-900/60 px-3 py-1 text-xs text-slate-300"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+              {/* screenshot floats on top with low opacity until hover */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={project.image}
+                alt={`${project.title} screenshot`}
+                className="relative h-full w-full object-cover object-top opacity-80 mix-blend-luminosity transition duration-700 hover:opacity-100 hover:mix-blend-normal"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+            </div>
+          </div>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="glow-cyan inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-5 py-2.5 text-sm font-medium text-cyan-200 ring-1 ring-cyan-400/30 transition hover:bg-cyan-500/25"
-          >
-            Live demo <FiExternalLink />
-          </a>
-          <a
-            href={project.repoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-5 py-2.5 text-sm text-slate-200 transition hover:border-violet-400 hover:text-violet-300"
-          >
-            <FiGithub /> Source
-          </a>
-        </div>
-      </div>
-    </motion.article>
+          <div className="relative flex w-full flex-col justify-center md:w-1/2">
+            <p className="text-xs uppercase tracking-[0.3em] text-cyan-400">
+              {project.subtitle}
+            </p>
+            <h3 className="mt-3 text-3xl font-bold text-slate-100 md:text-4xl">
+              {project.title}
+            </h3>
+            <p className="mt-4 text-sm leading-relaxed text-slate-300 md:text-base">
+              {project.description}
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              {project.stack.map((s) => (
+                <span
+                  key={s}
+                  className="rounded-full border border-slate-700/80 bg-slate-900/60 px-3 py-1 text-xs text-slate-300"
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="glow-cyan inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-5 py-2.5 text-sm font-medium text-cyan-200 ring-1 ring-cyan-400/30 transition hover:bg-cyan-500/25"
+              >
+                Live demo <FiExternalLink />
+              </a>
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-5 py-2.5 text-sm text-slate-200 transition hover:border-violet-400 hover:text-violet-300"
+              >
+                <FiGithub /> Source
+              </a>
+            </div>
+          </div>
+        </article>
+      </Tilt>
+    </motion.div>
   );
 }
 
@@ -146,6 +180,8 @@ export default function Projects() {
         <p className="mx-auto mt-6 max-w-2xl text-balance text-slate-400">
           Every project below is deployed, monitored, and serving real users
           on the <span className="text-cyan-300">sentinal-ai.in</span> stack.
+          Hover the cards to tilt — hover the visuals to swap the 3D scene
+          for the live screenshot.
         </p>
       </motion.div>
 

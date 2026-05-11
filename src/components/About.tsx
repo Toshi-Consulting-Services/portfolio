@@ -1,21 +1,33 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { FiShield, FiCpu, FiZap } from "react-icons/fi";
+import Tilt from "react-parallax-tilt";
 
-const cards = [
+const MiniIcon = dynamic(() => import("./three/MiniIcon"), {
+  ssr: false,
+  loading: () => null,
+});
+
+type Card = {
+  kind: "shield" | "cpu" | "bolt";
+  title: string;
+  body: string;
+};
+
+const cards: Card[] = [
   {
-    icon: FiShield,
+    kind: "shield",
     title: "Security-first",
     body: "From SAST/DAST pipelines to hardened deployment — security is the product, not an afterthought.",
   },
   {
-    icon: FiCpu,
+    kind: "cpu",
     title: "AI-native",
     body: "LLM agents that actually ship: SQL copilots, code reviewers, adaptive assessment — grounded, evaluated, observable.",
   },
   {
-    icon: FiZap,
+    kind: "bolt",
     title: "Production-grade",
     body: "Type-safe, monitored, and deployed. Real users, real subdomains, real uptime.",
   },
@@ -55,15 +67,30 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: i * 0.1 }}
-            className="glass group rounded-2xl p-6 transition hover:border-cyan-500/30"
           >
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300 transition group-hover:scale-110">
-              <c.icon size={22} />
-            </div>
-            <h3 className="text-lg font-semibold text-slate-100">{c.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              {c.body}
-            </p>
+            <Tilt
+              glareEnable
+              glareMaxOpacity={0.2}
+              glareColor="#a78bfa"
+              glarePosition="all"
+              tiltMaxAngleX={10}
+              tiltMaxAngleY={10}
+              scale={1.03}
+              transitionSpeed={1500}
+              className="will-change-transform"
+            >
+              <div className="glass group relative h-full rounded-2xl p-6 transition hover:border-cyan-500/30">
+                <div className="relative mx-auto mb-5 h-28 w-28">
+                  <MiniIcon kind={c.kind} />
+                </div>
+                <h3 className="text-center text-lg font-semibold text-slate-100">
+                  {c.title}
+                </h3>
+                <p className="mt-2 text-center text-sm leading-relaxed text-slate-400">
+                  {c.body}
+                </p>
+              </div>
+            </Tilt>
           </motion.div>
         ))}
       </div>
