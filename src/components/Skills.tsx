@@ -37,8 +37,16 @@ export default function Skills() {
         transition={{ duration: 0.9 }}
         className="glass relative h-[600px] overflow-hidden rounded-3xl md:h-[680px]"
       >
+        {/* warm radial glow behind the scene so balls don't blend into pure black */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 45%, rgba(34,211,238,0.18), rgba(139,92,246,0.10) 35%, transparent 65%)",
+          }}
+        />
         <SkillsScene />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-slate-950/40" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-slate-950/30" />
         <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.3em] text-slate-500">
           drag · hover · orbit
         </div>

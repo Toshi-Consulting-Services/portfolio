@@ -42,8 +42,8 @@ const techs: Tech[] = [
   { name: "GitHub",     logo: "/logos/github.svg",     position: [ 3.0, -3.9,  0.0] },
 ];
 
-const BALL_SIZE = 0.95;
-const BALL_COLOR = "#1e293b";
+const BALL_SIZE = 1.0;
+const BALL_COLOR = "#475569"; // slate-600 — light enough to read against the dark bg
 
 function TechBall({ tech }: { tech: Tech }) {
   const meshRef = useRef<Mesh>(null);
@@ -77,23 +77,26 @@ function TechBall({ tech }: { tech: Tech }) {
           <sphereGeometry args={[BALL_SIZE, 48, 48]} />
           <meshStandardMaterial
             color={BALL_COLOR}
-            roughness={0.4}
-            metalness={0.5}
-            emissive={hovered ? "#22d3ee" : "#000000"}
-            emissiveIntensity={hovered ? 0.25 : 0}
+            roughness={0.55}
+            metalness={0.15}
+            emissive={hovered ? "#22d3ee" : "#1e293b"}
+            emissiveIntensity={hovered ? 0.4 : 0.18}
           />
           <Decal
             position={[0, 0, BALL_SIZE]}
             rotation={[0, 0, 0]}
-            scale={BALL_SIZE * 1.4}
+            scale={BALL_SIZE * 1.85}
           >
             <meshStandardMaterial
               map={logoTex}
               transparent
               polygonOffset
-              polygonOffsetFactor={-5}
+              polygonOffsetFactor={-10}
               roughness={0.5}
               metalness={0}
+              emissive="#ffffff"
+              emissiveMap={logoTex}
+              emissiveIntensity={0.35}
             />
           </Decal>
         </mesh>
@@ -112,16 +115,17 @@ function TechBall({ tech }: { tech: Tech }) {
 export default function SkillsScene() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 13], fov: 55 }}
+      camera={{ position: [0, 0, 12], fov: 50 }}
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true }}
       className="!absolute inset-0"
     >
       <Suspense fallback={null}>
-        <ambientLight intensity={0.6} />
-        <pointLight position={[8, 8, 8]} intensity={1.6} color="#ffffff" />
+        <ambientLight intensity={1.0} />
+        <directionalLight position={[0, 0, 8]} intensity={1.4} color="#ffffff" />
+        <pointLight position={[8, 8, 8]} intensity={1.4} color="#ffffff" />
         <pointLight position={[-8, -8, -8]} intensity={1.0} color="#a78bfa" />
-        <pointLight position={[0, 0, 5]} intensity={0.6} color="#22d3ee" />
+        <pointLight position={[0, 4, 6]} intensity={0.9} color="#67e8f9" />
 
         <Stars
           radius={60}
