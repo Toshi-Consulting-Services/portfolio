@@ -24,9 +24,8 @@ export default function Skills() {
         <h2 className="mt-4 text-4xl font-bold md:text-5xl">
           What <span className="gradient-text">we build with</span>
         </h2>
-        <p className="mx-auto mt-6 max-w-2xl text-balance text-slate-400">
-          15 floating planets — every one a tool we ship with. Drag to
-          orbit, scroll past to keep going.
+        <p className="mx-auto mt-6 max-w-xl text-balance text-slate-400">
+          Hover any planet to highlight it. Drag the starfield to orbit.
         </p>
       </motion.div>
 
@@ -35,13 +34,12 @@ export default function Skills() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.9 }}
-        className="glass relative h-[520px] overflow-hidden rounded-3xl md:h-[600px]"
+        className="glass relative h-[600px] overflow-hidden rounded-3xl md:h-[680px]"
       >
         <SkillsScene />
-        {/* gradient fade for edges */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-slate-950/40" />
-        <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.3em] text-slate-500">
-          drag to orbit
+        <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.3em] text-slate-500">
+          drag · hover · orbit
         </div>
       </motion.div>
     </section>

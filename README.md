@@ -33,16 +33,6 @@ npm run build
 npm start
 ```
 
-## Adding screenshots
-
-Drop the 3 project screenshots in [`public/projects/`](public/projects/) as:
-
-- `urbi.png`
-- `sentinel-scr.png`
-- `examprep.png`
-
-The cards render with `object-cover object-top` (16:9), so frame your screenshots with the dashboard at the top.
-
 ## License
 
 © Toshi Consulting Services — all rights reserved.

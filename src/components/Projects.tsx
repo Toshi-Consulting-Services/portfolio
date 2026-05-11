@@ -17,7 +17,6 @@ type Project = {
   description: string;
   liveUrl: string;
   repoUrl: string;
-  image: string;
   stack: string[];
   accent: string;
   shape: ShapeKind;
@@ -31,7 +30,6 @@ const projects: Project[] = [
       "A bilingual (English/Hindi) AI assistant for municipal commissioners. Ask any governance question — URBI generates a safe SQL query, runs it on live ULB data, and renders an interactive dashboard. Built around Llama 3.3 on Groq.",
     liveUrl: "https://ulbdemo.sentinal-ai.in",
     repoUrl: "https://github.com/Toshi-Consulting-Services/cyber-security-llm-agents",
-    image: "/projects/urbi.png",
     stack: ["Next.js", "Llama 3.3", "Groq", "PostgreSQL", "Text-to-SQL"],
     accent: "from-cyan-500/30 to-blue-500/20",
     shape: "globe",
@@ -43,7 +41,6 @@ const projects: Project[] = [
       "Multi-tenant SaaS for continuous secure code review. Runs gitleaks + semgrep across customer repos, triages findings by severity, tracks suppressions, and maps each finding to CWE classifications.",
     liveUrl: "https://securecode.sentinal-ai.in",
     repoUrl: "https://github.com/Toshi-Consulting-Services/secure-code-review",
-    image: "/projects/sentinel-scr.png",
     stack: ["Next.js", "Semgrep", "Gitleaks", "CWE", "Multi-tenant"],
     accent: "from-violet-500/30 to-fuchsia-500/20",
     shape: "shield",
@@ -55,7 +52,6 @@ const projects: Project[] = [
       "AI-powered adaptive assessment platform for Indian K-12. Schools and independent students get personalized question banks, analytics, and live session monitoring. Currently serving 170+ users across 6 schools with active paid revenue.",
     liveUrl: "https://examprep.sentinal-ai.in",
     repoUrl: "https://github.com/Toshi-Consulting-Services/MVP_Student_Assessment_Portal",
-    image: "/projects/examprep.png",
     stack: ["Next.js", "FastAPI", "PostgreSQL", "Adaptive ML", "Stripe"],
     accent: "from-emerald-500/30 to-teal-500/20",
     shape: "brain",
@@ -73,12 +69,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     >
       <Tilt
         glareEnable
-        glareMaxOpacity={0.15}
+        glareMaxOpacity={0.12}
         glareColor="#22d3ee"
         glarePosition="all"
-        tiltMaxAngleX={4}
-        tiltMaxAngleY={4}
-        scale={1.01}
+        tiltMaxAngleX={3}
+        tiltMaxAngleY={3}
+        scale={1.005}
         transitionSpeed={1500}
         className="will-change-transform"
       >
@@ -93,27 +89,17 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             } h-72 w-72 rounded-full bg-gradient-to-br ${project.accent} blur-3xl`}
           />
 
+          {/* 3D scene fills the visual half */}
           <div className="relative w-full md:w-1/2">
-            {/* 3D themed shape behind/over screenshot */}
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-800/80 bg-gradient-to-br from-slate-900/80 to-slate-950">
-              {/* live 3D canvas */}
-              <div className="absolute inset-0">
-                <ProjectShape kind={project.shape} />
+            <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-slate-800/80 bg-gradient-to-br from-slate-900/80 to-slate-950 md:aspect-video">
+              <ProjectShape kind={project.shape} />
+              <div className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-slate-900/60 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-slate-400 backdrop-blur">
+                drag to spin
               </div>
-
-              {/* screenshot floats on top with low opacity until hover */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={project.image}
-                alt={`${project.title} screenshot`}
-                className="relative h-full w-full object-cover object-top opacity-80 mix-blend-luminosity transition duration-700 hover:opacity-100 hover:mix-blend-normal"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
             </div>
           </div>
 
+          {/* text + ctas */}
           <div className="relative flex w-full flex-col justify-center md:w-1/2">
             <p className="text-xs uppercase tracking-[0.3em] text-cyan-400">
               {project.subtitle}
@@ -178,10 +164,9 @@ export default function Projects() {
           Three live <span className="gradient-text">platforms</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-balance text-slate-400">
-          Every project below is deployed, monitored, and serving real users
-          on the <span className="text-cyan-300">sentinal-ai.in</span> stack.
-          Hover the cards to tilt — hover the visuals to swap the 3D scene
-          for the live screenshot.
+          Every project is deployed and serving real users on the{" "}
+          <span className="text-cyan-300">sentinal-ai.in</span> stack. Drag
+          each 3D scene to spin it — click <span className="text-cyan-300">Live demo</span> to see the real platform.
         </p>
       </motion.div>
 
