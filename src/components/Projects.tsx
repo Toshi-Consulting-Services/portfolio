@@ -21,7 +21,7 @@ const projects: Project[] = [
     description:
       "A bilingual (English/Hindi) AI assistant for municipal commissioners. Ask any governance question — URBI generates a safe SQL query, runs it on live ULB data, and renders an interactive dashboard. Built around Llama 3.3 on Groq.",
     liveUrl: "https://ulbdemo.sentinal-ai.in",
-    repoUrl: "https://github.com/kanav-toshiconsulting/cyber-security-llm-agents",
+    repoUrl: "https://github.com/Toshi-Consulting-Services/cyber-security-llm-agents",
     image: "/projects/urbi.png",
     stack: ["Next.js", "Llama 3.3", "Groq", "PostgreSQL", "Text-to-SQL"],
     accent: "from-cyan-500/30 to-blue-500/20",
@@ -32,7 +32,7 @@ const projects: Project[] = [
     description:
       "Multi-tenant SaaS for continuous secure code review. Runs gitleaks + semgrep across customer repos, triages findings by severity, tracks suppressions, and maps each finding to CWE classifications.",
     liveUrl: "https://securecode.sentinal-ai.in",
-    repoUrl: "https://github.com/kanav-toshiconsulting/secure-code-review",
+    repoUrl: "https://github.com/Toshi-Consulting-Services/secure-code-review",
     image: "/projects/sentinel-scr.png",
     stack: ["Next.js", "Semgrep", "Gitleaks", "CWE", "Multi-tenant"],
     accent: "from-violet-500/30 to-fuchsia-500/20",
@@ -43,7 +43,7 @@ const projects: Project[] = [
     description:
       "AI-powered adaptive assessment platform for Indian K-12. Schools and independent students get personalized question banks, analytics, and live session monitoring. Currently serving 170+ users across 6 schools with active paid revenue.",
     liveUrl: "https://examprep.sentinal-ai.in",
-    repoUrl: "https://github.com/kanav-toshiconsulting/MVP_Student_Assessment_Portal",
+    repoUrl: "https://github.com/Toshi-Consulting-Services/MVP_Student_Assessment_Portal",
     image: "/projects/examprep.png",
     stack: ["Next.js", "FastAPI", "PostgreSQL", "Adaptive ML", "Stripe"],
     accent: "from-emerald-500/30 to-teal-500/20",

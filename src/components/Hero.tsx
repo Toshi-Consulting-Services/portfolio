@@ -70,7 +70,7 @@ export default function Hero() {
             </span>
           </a>
           <a
-            href="https://github.com/kanav-toshiconsulting"
+            href="https://github.com/Toshi-Consulting-Services"
             target="_blank"
             rel="noreferrer"
             className="rounded-full border border-slate-700 p-3 text-slate-200 transition hover:border-violet-400 hover:text-violet-300"

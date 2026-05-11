@@ -39,12 +39,12 @@ export default function Contact() {
             <FiArrowUpRight />
           </a>
           <a
-            href="https://github.com/kanav-toshiconsulting"
+            href="https://github.com/Toshi-Consulting-Services"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-6 py-3 text-sm text-slate-200 transition hover:border-violet-400 hover:text-violet-300"
           >
-            <FiGithub /> kanav-toshiconsulting
+            <FiGithub /> Toshi-Consulting-Services
           </a>
         </div>
       </motion.div>
