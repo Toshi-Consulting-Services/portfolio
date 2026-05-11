@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Toshi Consulting Services — Portfolio
 
-## Getting Started
+A 3D portfolio showcasing the three live platforms built and operated by Toshi Consulting Services on the `sentinal-ai.in` stack.
 
-First, run the development server:
+## Featured projects
+
+| Project | Live | What it is |
+|---|---|---|
+| **URBI Command Center** | [ulbdemo.sentinal-ai.in](https://ulbdemo.sentinal-ai.in) | Bilingual AI governance copilot for Haryana ULBs — text-to-SQL on live municipal data, Llama 3.3 + Groq |
+| **Sentinel SCR** | [securecode.sentinal-ai.in](https://securecode.sentinal-ai.in) | Multi-tenant secure code review SaaS — gitleaks + semgrep, CWE-mapped findings, suppressions, audit log |
+| **Adaptive Assessment AI** | [examprep.sentinal-ai.in](https://examprep.sentinal-ai.in) | Live K-12 assessment platform — adaptive question banks, school + independent tiers, 170+ users, paid revenue |
+
+## Stack
+
+- **Next.js 14** (App Router) + **TypeScript** + **Tailwind**
+- **Three.js** + **@react-three/fiber** + **@react-three/drei** for the 3D hero scene
+- **framer-motion** for scroll-triggered reveals
+- **react-icons** for iconography
+
+## Local dev
 
 ```bash
+nvm use 20
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Adding screenshots
 
-## Learn More
+Drop the 3 project screenshots in [`public/projects/`](public/projects/) as:
 
-To learn more about Next.js, take a look at the following resources:
+- `urbi.png`
+- `sentinel-scr.png`
+- `examprep.png`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The cards render with `object-cover object-top` (16:9), so frame your screenshots with the dashboard at the top.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© Toshi Consulting Services — all rights reserved.
