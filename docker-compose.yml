@@ -10,3 +10,13 @@ services:
       - "172.17.0.1:3003:3000"
     environment:
       - NODE_ENV=production
+    # Hardening applied 2026-05-13 post-XMRig incident
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /var/tmp:rw,noexec,nosuid,size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 200
+    mem_limit: 256m

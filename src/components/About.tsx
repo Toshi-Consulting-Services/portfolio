@@ -79,9 +79,9 @@ export default function About() {
           <span className="gradient-text">production playbook.</span>
         </h2>
         <p className="mt-6 max-w-xl text-balance text-slate-400">
-          Toshi Consulting Services designs and ships AI platforms for the
-          security and public-sector space — architecture, agents, frontend,
-          infra, all under one roof.
+          Toshi Consulting Services designs and ships AI platforms across LLM
+          security, cloud identity, governance, and assessment — architecture,
+          agents, frontend, infra, all under one roof.
         </p>
       </motion.div>
 

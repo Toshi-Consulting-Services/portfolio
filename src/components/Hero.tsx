@@ -10,7 +10,7 @@ const HeroScene = dynamic(() => import("./HeroScene"), {
 });
 
 const stats = [
-  { value: "3", label: "live platforms" },
+  { value: "6", label: "shipped platforms" },
   { value: "170+", label: "active users" },
   { value: "100%", label: "production-grade" },
 ];
@@ -74,9 +74,11 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.35 }}
           className="mx-auto mt-6 max-w-2xl text-balance text-sm leading-relaxed text-slate-400 md:text-base"
         >
-          From URBI to Sentinel SCR to Adaptive Assessment AI — production-grade
-          AI products, end-to-end, shipped on the{" "}
-          <span className="text-cyan-300">sentinal-ai.in</span> stack.
+          From <span className="text-cyan-300">SentinalAI</span> to{" "}
+          <span className="text-cyan-300">Escalion</span> to{" "}
+          <span className="text-cyan-300">URBI</span> — production-grade AI
+          products across LLM security, cloud identity, governance, and
+          adaptive assessment.
         </motion.p>
 
         {/* CTAs */}

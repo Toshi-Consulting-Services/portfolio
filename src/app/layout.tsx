@@ -16,11 +16,11 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Toshi Consulting Services — Portfolio",
   description:
-    "AI-powered security, governance, and assessment platforms by Toshi Consulting Services.",
+    "AI-powered platforms across LLM security, cloud identity, governance, assessment, and HR — by Toshi Consulting Services.",
   openGraph: {
     title: "Toshi Consulting Services",
     description:
-      "AI-powered security, governance, and assessment platforms.",
+      "AI-powered platforms across LLM security, cloud identity, governance, assessment, and HR.",
     type: "website",
   },
 };

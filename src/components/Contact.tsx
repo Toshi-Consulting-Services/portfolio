@@ -47,10 +47,10 @@ export default function Contact() {
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4 md:justify-start">
               <a
-                href="mailto:digital.toshiconsulting@gmail.com"
+                href="mailto:info@toshiconsulting.com"
                 className="glow-cyan inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-6 py-3 text-sm font-medium text-cyan-100 ring-1 ring-cyan-400/30 transition hover:bg-cyan-500/25"
               >
-                <FiMail /> digital.toshiconsulting@gmail.com
+                <FiMail /> info@toshiconsulting.com
                 <FiArrowUpRight />
               </a>
               <a

@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { FiExternalLink, FiGithub } from "react-icons/fi";
+import { FiExternalLink, FiLock } from "react-icons/fi";
 import Tilt from "react-parallax-tilt";
 import type { ShapeKind } from "./three/ProjectShape";
 
@@ -15,11 +15,11 @@ type Project = {
   title: string;
   subtitle: string;
   description: string;
-  liveUrl: string;
-  repoUrl: string;
+  liveUrl?: string;
   stack: string[];
   accent: string;
   shape: ShapeKind;
+  privateDemo?: boolean;
 };
 
 const projects: Project[] = [
@@ -29,7 +29,6 @@ const projects: Project[] = [
     description:
       "A bilingual (English/Hindi) AI assistant for municipal commissioners. Ask any governance question — URBI generates a safe SQL query, runs it on live ULB data, and renders an interactive dashboard. Built around Llama 3.3 on Groq.",
     liveUrl: "https://ulbdemo.sentinal-ai.in",
-    repoUrl: "https://github.com/Toshi-Consulting-Services/cyber-security-llm-agents",
     stack: ["Next.js", "Llama 3.3", "Groq", "PostgreSQL", "Text-to-SQL"],
     accent: "from-cyan-500/30 to-blue-500/20",
     shape: "globe",
@@ -40,7 +39,6 @@ const projects: Project[] = [
     description:
       "Multi-tenant SaaS for continuous secure code review. Runs gitleaks + semgrep across customer repos, triages findings by severity, tracks suppressions, and maps each finding to CWE classifications.",
     liveUrl: "https://securecode.sentinal-ai.in",
-    repoUrl: "https://github.com/Toshi-Consulting-Services/secure-code-review",
     stack: ["Next.js", "Semgrep", "Gitleaks", "CWE", "Multi-tenant"],
     accent: "from-violet-500/30 to-fuchsia-500/20",
     shape: "shield",
@@ -51,10 +49,39 @@ const projects: Project[] = [
     description:
       "AI-powered adaptive assessment platform for Indian K-12. Schools and independent students get personalized question banks, analytics, and live session monitoring. Currently serving 170+ users across 6 schools with active paid revenue.",
     liveUrl: "https://examprep.sentinal-ai.in",
-    repoUrl: "https://github.com/Toshi-Consulting-Services/MVP_Student_Assessment_Portal",
     stack: ["Next.js", "FastAPI", "PostgreSQL", "Adaptive ML", "Stripe"],
     accent: "from-emerald-500/30 to-teal-500/20",
     shape: "brain",
+  },
+  {
+    title: "SentinalAI",
+    subtitle: "AI-Native Security OS · LLM & AI supply-chain defense",
+    description:
+      "Real-time detection and blocking of AI threats — prompt injection, jailbreaks, training-data extraction, agent hijacking — mapped to the MITRE ATLAS taxonomy. Ships with an Auto-Response Engine and a policy engine that sits in front of LLMs, agents, and API gateways. Reduces AI vulnerabilities by 78%.",
+    liveUrl: "https://sentinal-ai.com",
+    stack: ["LLM Security", "MITRE ATLAS", "Auto-Response", "Policy Engine", "AI Gateway"],
+    accent: "from-amber-500/30 to-orange-500/20",
+    shape: "aegis",
+  },
+  {
+    title: "Escalion",
+    subtitle: "Exploit-path intelligence · AWS IAM",
+    description:
+      "Identity-native attack-path analysis for AWS. Builds a directed identity graph (CAN_ASSUME, TRUSTS, HAS_POLICY, cross-account) from read-only IAM snapshots and enumerates real privilege-escalation chains — the paths CSPM/CIEM scanners miss. Deterministic, with SHA-256 content-addressed snapshots.",
+    liveUrl: "https://escalion.io",
+    stack: ["AWS IAM", "Graph Analysis", "Cross-Account", "CloudTrail", "Identity Security"],
+    accent: "from-indigo-500/30 to-sky-500/20",
+    shape: "graph",
+  },
+  {
+    title: "HRMS Portal",
+    subtitle: "Internal HR platform · Private deployment",
+    description:
+      "Full-stack HR management portal — employee directory, attendance and leave tracking, payroll runs, and role-based admin dashboards. Built for an internal customer; not publicly accessible. Demo available on request.",
+    stack: ["Next.js", "PostgreSQL", "Role-based Access", "Payroll", "Attendance"],
+    accent: "from-rose-500/30 to-pink-500/20",
+    shape: "team",
+    privateDemo: true,
   },
 ];
 
@@ -123,22 +150,27 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="glow-cyan inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-5 py-2.5 text-sm font-medium text-cyan-200 ring-1 ring-cyan-400/30 transition hover:bg-cyan-500/25"
-              >
-                Live demo <FiExternalLink />
-              </a>
-              <a
-                href={project.repoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-5 py-2.5 text-sm text-slate-200 transition hover:border-violet-400 hover:text-violet-300"
-              >
-                <FiGithub /> Source
-              </a>
+              {project.privateDemo ? (
+                <a
+                  href={`mailto:info@toshiconsulting.com?subject=Demo%20request%20—%20${encodeURIComponent(
+                    project.title,
+                  )}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-rose-500/15 px-5 py-2.5 text-sm font-medium text-rose-200 ring-1 ring-rose-400/30 transition hover:bg-rose-500/25"
+                >
+                  <FiLock /> Private &mdash; request demo
+                </a>
+              ) : (
+                project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="glow-cyan inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-5 py-2.5 text-sm font-medium text-cyan-200 ring-1 ring-cyan-400/30 transition hover:bg-cyan-500/25"
+                  >
+                    Live demo <FiExternalLink />
+                  </a>
+                )
+              )}
             </div>
           </div>
         </article>
@@ -161,12 +193,11 @@ export default function Projects() {
           Selected Work
         </p>
         <h2 className="mt-4 text-4xl font-bold md:text-5xl">
-          Three live <span className="gradient-text">platforms</span>
+          Six shipped <span className="gradient-text">platforms</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-balance text-slate-400">
-          Every project is deployed and serving real users on the{" "}
-          <span className="text-cyan-300">sentinal-ai.in</span> stack. Drag
-          each 3D scene to spin it — click <span className="text-cyan-300">Live demo</span> to see the real platform.
+          Production builds across AI security, cloud identity, and applied AI
+          — each card spins in 3D. Click <span className="text-cyan-300">Live demo</span> to open the real platform, or request access to the private ones.
         </p>
       </motion.div>
 
